@@ -1,0 +1,557 @@
+\documentclass{article}
+\title{Intro to PDEs: Ch 2.6 HW}
+\author{Logan Rhyne, Harley Combest, Roy Galang, Jesse DiCenso}
+\usepackage[T1]{fontenc}
+\usepackage{amsfonts, amsmath, amsthm, amssymb}
+\usepackage{mathtools, bigints, empheq}
+\usepackage{graphicx, wrapfig, xcolor, float}
+\usepackage{stackrel}
+\usepackage{pgfplots}
+\usepackage[shortlabels]{enumitem}
+\usepackage[margin=1.0in]{geometry}
+\setlength{\parindent}{0pt}
+\theoremstyle{definition}
+\newtheorem*{lemma}{Lemma}
+\newtheorem*{conj}{Conjecture}
+\newtheorem{prob}{}
+\newtheorem*{pf}{Proof}
+\newtheorem*{dpf}{Disproof}
+\renewcommand\qedsymbol{$\blacksquare$}
+\renewcommand{\emptyset}{\varnothing}
+\renewcommand{\epsilon}{\varepsilon}
+\newenvironment{disproof}{\begin{proof}[Disproof]}{\end{proof}}
+\newenvironment{ans}{\begin{proof}[Answer]\renewcommand{\qedsymbol}{}}{\end{proof}}
+\newenvironment{boldenv}{\bfseries\boldmath}{}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+
+\pgfplotsset{compat=1.18}
+
+\DeclareMathOperator{\ran}{range}
+
+\begin{document}
+	
+    \maketitle
+
+\begin{boldenv}
+    \underline{Problem 4}. \begin{enumerate}
+        \item Find solution
+        \[\begin{cases}
+            u_{tt} - c^2u_{xx} = 0 & t > 0, x > 0\\
+            u|_{t=0} = \phi(x),\quad u_t|_{t=0} = c\phi'(x) & x > 0\\
+            (u_x + \alpha u)|_{x=0} = 0 & t > 0
+        \end{cases}\]
+        (separately in $x > ct$ and $0 < x < ct$).
+
+        \item Discuss \textit{reflected wave}. In particular, consider $\phi(x) = e^{ikx}$.
+    \end{enumerate}
+\end{boldenv}
+\begin{ans}
+\begin{enumerate}
+    \item For $x > ct$, since the boundary has not come into effect yet, we can just use D'Alembert's formula. From this, we get
+    \begin{align*}
+        u(t,x)|_{x > ct} &= \frac{1}{2}(\phi(x+ct) + \phi(x-ct)) + \frac{1}{2c}\int_{x-ct}^{x+ct}c\phi'(s)\,ds\\
+        &= \frac{1}{2}(\phi(x+ct) + \phi(x-ct)) + \frac{1}{2}(\phi(x+ct) - \phi(x-ct)) + C\\
+        &= \phi(x+ct) + C
+    \end{align*}
+
+    Now, for $0 < x < ct$, we utilize the fact that we are working with a pure reflection to get a general solution that
+    \[u(t,x) = \phi(x+ct) + g(x-ct).\]
+    We plug this into the boundary condition to get that
+    \[\phi'(ct) + g'(-ct) + \alpha \phi(ct) + \alpha g(-ct) = 0.\]
+    Now we want to solve for $g$, and we substitute $s = x-ct$, getting
+    \begin{align*}
+        g'(s) + \alpha g(s) &= -(\phi'(-s) + \alpha \phi(-s))\\
+        e^{\alpha s}(g'(s) + \alpha g(s)) &= -e^{\alpha s}(\phi'(-s) + \alpha \phi(-s))\\
+        (e^{\alpha s}g(s))' &= -e^{\alpha s}(\phi'(-s) + \alpha \phi(-s))\\
+        e^{\alpha s}g(s) &= \int_0^{-s} e^{-\alpha\tau}(\phi'(\tau) + \alpha\, \phi(\tau))\,d\tau \tag{taking $\tau = -s$}\\
+        g(s) &= e^{-\alpha s}\int_0^{-s} e^{-\alpha\tau}(\phi'(\tau) + \alpha\, \phi(\tau))\,d\tau + C\\
+    \end{align*}
+
+    To fit the initial conditions, we find that our constants are equal to zero. We now have our final solution that
+    \[\boxed{u(t,x) = \begin{cases}
+        \phi(x+ct) & x > ct\\
+        \phi(x+ct) + e^{\alpha (ct-x)}\int_0^{ct-x} e^{-\alpha\tau}(\phi'(\tau) + \alpha\, \phi(\tau))\,d\tau & x < ct
+    \end{cases}}\]
+
+    \item The reflected wave in particular is the term of 
+    \begin{equation}
+        e^{\alpha (ct-x)}\int_0^{ct-x} e^{-\alpha\tau}(\phi'(\tau) + \alpha\, \phi(\tau))\,d\tau.
+    \end{equation}
+    We take $\phi(x) = e^{ikx}$, which means $\phi'(x) = ike^{ikx}$. Substituting this into expression (1) gives us
+    \begin{equation*}
+        e^{\alpha (ct-x)}\int_0^{ct-x} e^{-\alpha\tau}(ike^{ik\tau} + \alpha e^{ik\tau})\,d\tau.
+    \end{equation*}
+    We evaluate this integral, giving us
+    \begin{align*}
+        e^{\alpha (ct-x)}\int_0^{ct-x} e^{-\alpha\tau}(ike^{ik\tau} + \alpha e^{ik\tau})\,d\tau &= (ik + \alpha) e^{\alpha (ct-x)}\int_0^{ct-x}e^{\tau(ik - \alpha)}d\tau\\
+        &= \frac{ik + \alpha}{ik - \alpha} e^{\alpha (ct-x)} \left[e^{\tau(ik - \alpha)}\right]_{\tau = 0}^{\tau = ct - x}\\
+        &= \frac{ik + \alpha}{ik - \alpha}\left[ e^{\alpha (ct-x)} e^{(ct-x)(ik-\alpha)} -  e^{\alpha (ct-x)}\right]\\
+        &= \frac{ik + \alpha}{ik - \alpha}\left[ e^{ik(ct-x)} - e^{\alpha(ct-x)} \right] \tag{2}
+    \end{align*}
+
+    It hits the boundary at $x=0$, so we plug that into (2) to get
+    \begin{equation*}
+        \frac{ik + \alpha}{ik - \alpha}e^{ikct} - \frac{ik + \alpha}{ik - \alpha}e^{\alpha ct}. \tag{3}
+    \end{equation*}
+
+    We mainly care about the second term of (3). If $\alpha > 0$, then the boundary puts energy into the wave. If $\alpha < 0$, the boundary takes energy out of the wave. If $\alpha = 0$, then the boundary does not affect the energy of the wave.
+    
+\end{enumerate}
+\end{ans}
+
+\begin{boldenv}
+    \underline{Problem 5}. \begin{enumerate}
+        \item Find solution
+        \[\begin{cases}
+            u_{tt} - c^2u_{xx} = 0 & t > 0, x > 0\\
+            u|_{t=0} = \phi(x),\quad u_t|_{t=0} = c\phi'(x) & x > 0\\
+            (u_x + \alpha u_t)|_{x=0} = 0 & t > 0
+        \end{cases}\]
+        (separately in $x > ct$ and $0 < x < ct$).
+
+        \item Discuss \textit{reflected wave}. In particular, consider $\phi(x) = e^{ikx}$.
+    \end{enumerate}
+\end{boldenv}
+\begin{ans}
+\begin{enumerate}
+    \item For $x > ct$, since the boundary has not come into effect yet, we can just use D'Alembert's formula. From this, we get
+    \begin{align*}
+        u(t,x)|_{x > ct} &= \frac{1}{2}(\phi(x+ct) + \phi(x-ct)) + \frac{1}{2c}\int_{x-ct}^{x+ct}c\phi'(s)\,ds\\
+        &= \frac{1}{2}(\phi(x+ct) + \phi(x-ct)) + \frac{1}{2}(\phi(x+ct) - \phi(x-ct)) + C\\
+        &= \phi(x+ct) + C
+    \end{align*}
+
+    Now, for $0 < x < ct$, we utilize the fact that we are working with a pure reflection to get a general solution that
+    \[u(t,x) = \phi(x+ct) + g(x-ct).\]
+    We plug this into the boundary condition to get that
+    \begin{align*}
+        \phi'(ct) + g'(-ct) + c\alpha \phi'(ct) + -c\alpha g'(-ct) &= 0\\
+        \phi'(ct)(1 + c\alpha) + g'(-ct)(1 - c\alpha) &= 0
+    \end{align*}
+    Now we want to solve for $g$, and we substitute $s = x-ct$, getting
+    \begin{align*}
+        g'(s)(1-c\alpha) &= -\phi'(-s)(1+c\alpha)\\
+        g'(s) &= -\frac{1+c\alpha}{1-c\alpha}\phi'(-
+        s)\\
+        g(s) &= \frac{1+c\alpha}{1-c\alpha}\int_0^{-s}\phi'(\tau)\,d\tau \tag{taking $\tau = -s$}\\
+        &=\frac{1+c\alpha}{1-c\alpha}(\phi'(-s) - \phi'(0))\\
+        &=\frac{1+c\alpha}{1-c\alpha}(\phi'(ct-x) - \phi'(0))
+    \end{align*}
+
+    To fit the initial conditions, we find that our constants are equal to zero. We now have our final solution that
+    \[\boxed{u(t,x) = \begin{cases}
+        \phi(x+ct) & x > ct\\
+        \phi(x+ct) + \frac{1+c\alpha}{1-c\alpha}(\phi'(ct-x) - \phi'(0)) & x < ct
+    \end{cases}}\]
+
+
+\item The reflected wave in particular is the term of 
+    \begin{equation*}
+        \frac{1+c\alpha}{1-c\alpha}(\phi'(ct-x) - \phi'(0))
+    \end{equation*}
+    We take $\phi(x) = e^{ikx}$, which means $\phi'(x) = ike^{ikx}$. Substituting this into expression (1) gives us
+    \begin{equation*}
+        \frac{1+c\alpha}{1-c\alpha}(ike^{ik(ct-x)} - ik) \tag{4}
+    \end{equation*}
+    It hits the boundary at $x=0$, so we plug that into (4) to get
+    \begin{equation*}
+        ik\frac{1+c\alpha}{1-c\alpha}(e^{ikct} - 1)
+    \end{equation*}
+
+    There are no pure exponentials that rely on $\alpha$, so the boundary will not increase or decrease the amplitude of the wave depending on $\alpha$, but it will increase the frequency with time due to $e^{ikct}$.
+\end{enumerate}
+\end{ans}
+
+\begin{boldenv}
+    \underline{Problem 8}. \\
+    By the method of continuation combined with D'Alembert's formula, solve each of the following twelve problems:
+    \begin{enumerate}[(1), start=9]
+        \item \[\begin{cases}
+            u_{tt} - c^2u_{xx} = 0 & x > 0\\
+            u|_{t=0} = 0 & x > 0\\
+            u_t|_{t=0} = \cos{x} & x > 0\\
+            u|_{x = 0} = 0 & t > 0
+        \end{cases}\]
+        \item \[\begin{cases}
+            u_{tt} - c^2u_{xx} = 0 & x > 0\\
+            u|_{t=0} = 0 & x > 0\\
+            u_t|_{t=0} = \cos{x} & x > 0\\
+            u_x|_{x = 0} = 0 & t > 0
+        \end{cases}\]
+        \item \[\begin{cases}
+            u_{tt} - c^2u_{xx} = 0 & x > 0\\
+            u|_{t=0} = 0 & x > 0\\
+            u_t|_{t=0} = \sin{x} & x > 0\\
+            u|_{x = 0} = 0 & t > 0
+        \end{cases}\]
+        \item \[\begin{cases}
+            u_{tt} - c^2u_{xx} = 0 & x > 0\\
+            u|_{t=0} = 0 & x > 0\\
+            u_t|_{t=0} = \sin{x} & x > 0\\
+            u_x|_{x = 0} = 0 & t > 0
+        \end{cases}\]
+        \item \[\begin{cases}
+            u_{tt} - c^2u_{xx} = 0 & x > 0\\
+            u|_{t=0} = \cos{x} & x > 0\\
+            u_t|_{t=0} = 0 & x > 0\\
+            u|_{x = 0} = 0 & t > 0
+        \end{cases}\]
+        \item \[\begin{cases}
+            u_{tt} - c^2u_{xx} = 0 & x > 0\\
+            u|_{t=0} = \cos{x} & x > 0\\
+            u_t|_{t=0} = 0 & x > 0\\
+            u_x|_{x = 0} = 0 & t > 0
+        \end{cases}\]
+        \item \[\begin{cases}
+            u_{tt} - c^2u_{xx} = 0 & x > 0\\
+            u|_{t=0} = \sin{x} & x > 0\\
+            u_t|_{t=0} = 0 & x > 0\\
+            u|_{x = 0} = 0 & t > 0
+        \end{cases}\]
+        \item \[\begin{cases}
+            u_{tt} - c^2u_{xx} = 0 & x > 0\\
+            u|_{t=0} = \sin{x} & x > 0\\
+            u_t|_{t=0} = 0 & x > 0\\
+            u_x|_{x = 0} = 0 & t > 0
+        \end{cases}\]
+        \item \[\begin{cases}
+            u_{tt} - c^2u_{xx} = 0 & x > 0\\
+            u|_{t=0} = 1 & x > 0\\
+            u_t|_{t=0} = 0 & x > 0\\
+            u_x|_{x = 0} = 0 & t > 0
+        \end{cases}\]
+        \item \[\begin{cases}
+            u_{tt} - c^2u_{xx} = 0 & x > 0\\
+            u|_{t=0} = 1 & x > 0\\
+            u_t|_{t=0} = 0 & x > 0\\
+            u|_{x = 0} = 0 & t > 0
+        \end{cases}\]
+        \item \[\begin{cases}
+            u_{tt} - c^2u_{xx} = 0 & x > 0\\
+            u|_{t=0} = 0 & x > 0\\
+            u_t|_{t=0} = 1 & x > 0\\
+            u_x|_{x = 0} = 0 & t > 0
+        \end{cases}\]
+        \item \[\begin{cases}
+            u_{tt} - c^2u_{xx} = 0 & x > 0\\
+            u|_{t=0} = 0 & x > 0\\
+            u_t|_{t=0} = 1 & x > 0\\
+            u|_{x = 0} = 0 & t > 0
+        \end{cases}\]
+    \end{enumerate}
+\end{boldenv}
+\begin{ans}
+\begin{enumerate}[(1), start=9]
+    \item In our problem, no waves are generated on the boundary. As such, we can solve the problem like a full-line problem via an odd extension (since $u|_{x=0} = 0$):
+    \[\phi_{odd}(x) = \begin{cases}
+        \phi(x) & x > 0\\
+        0 & x = 0\\
+        -\phi(-x) & x < 0
+    \end{cases}.\]
+    This allows us to rewrite the problem using D'Alembert's formula as
+    \[u(x,t) = \frac{1}{2}(\phi_{odd}(x+ct) + \phi_{odd}(x-ct)) + \frac{1}{2c}\int_{x-ct}^{x+ct}\psi_{odd}(s)\,ds.\]
+    There are two cases to consider: $x \geq ct$ and $0 < x < ct$.\\
+    \underline{$x \geq ct$}: By the odd extension, this instance yields D'Alembert's formula
+    \[u(x,t) = \frac{1}{2}(\phi(x+ct) + \phi(x-ct)) + \frac{1}{2c}\int_{x-ct}^{x+ct}\psi(s)\,ds.\]
+    \underline{$0 < x < ct$}: The odd extension says to change the sign of both $\phi$ and $x$. As such, we have
+    \[u(x,t) = \frac{1}{2}(\phi(x+ct) - \phi(ct-x)) + \frac{1}{2c}\int_{ct-x}^{x+ct}\psi(s)\,ds\]
+    For the purposes of this problem, we take $\phi(x) = 0$ and $\psi(x) = \cos(x)$. We integrate in the first case to get 
+    \begin{align*}
+        \frac{1}{2c}\int_{x-ct}^{x+ct}\cos(s)ds &= \left.\frac{1}{2c}\sin(s)\right|_{x-ct}^{x+ct}\\
+        &=\frac{1}{2c}(\sin(x+ct) - \sin(x-ct))
+    \end{align*}
+
+    We integrate in the second case to get
+    \begin{align*}
+        \frac{1}{2c}\int_{ct-x}^{x+ct}\cos(s)ds &= \left.\frac{1}{2c}\sin(s)\right|_{ct-x}^{x+ct}\\
+        &= \frac{1}{2c}(\sin(x+ct) - \sin(ct-x))
+    \end{align*}
+    We now have our final solution that
+    \[\boxed{u(x,t) = \begin{cases}
+       \frac{1}{2c}(\sin(x+ct) - \sin(x-ct)) & x \geq ct\\
+        \frac{1}{2c}(\sin(x+ct) - \sin(ct-x)) & 0 \leq x < ct
+    \end{cases}}\]
+
+    \item In our problem, no waves are generated on the boundary. As such, we can solve the problem like a full-line problem via an even extension (since $u_x|_{x=0} = 0$):
+    \[\phi_{even}(x) = \begin{cases}
+        \phi(x) & x > 0\\
+        0 & x = 0\\
+        \phi(-x) & x < 0
+    \end{cases}.\]
+    This allows us to rewrite the problem using D'Alembert's formula as
+    \[u(x,t) = \frac{1}{2}(\phi_{even}(x+ct) + \phi_{even}(x-ct)) + \frac{1}{2c}\int_{x-ct}^{x+ct}\psi_{even}(s)\,ds.\]
+    There are two cases to consider: $x \geq ct$ and $0 < x < ct$.\\
+    \underline{$x \geq ct$}: By the even extension, this instance yields D'Alembert's formula
+    \[u(x,t) = \frac{1}{2}(\phi(x+ct) + \phi(x-ct)) + \frac{1}{2c}\int_{x-ct}^{x+ct}\psi(s)\,ds.\]
+    \underline{$0 \leq x < ct$}: Otherwise, we have to modify it per the definition of the even extension. As such, we have
+    \[u(x,t) = \frac{1}{2}(\phi(x+ct) + \phi(ct-x)) + \frac{1}{2c}\left[\int_0^{x+ct}\psi(s)\,ds + \int_0^{ct-x}\psi(s)\,ds\right]\]
+    For the purposes of this problem, we take $\phi(x) = 0$ and $\psi(x) = \cos(x)$. We integrate in the first case to get 
+    \begin{align*}
+        \frac{1}{2c}\int_{x-ct}^{x+ct}\cos(s)ds &= \left.\frac{1}{2c}\sin(s)\right|_{x-ct}^{x+ct}\\
+        &=\frac{1}{2c}(\sin(x+ct) - \sin(x-ct))
+    \end{align*}
+
+    We integrate in the second case to get
+    \begin{align*}
+        \frac{1}{2c}\left[\int_0^{x+ct}\cos(s)\,ds + \int_0^{ct-x}\cos(s)\,ds\right]&= \left.\frac{1}{2c}\sin(s)\right|_0^{x+ct} + \left.\frac{1}{2c}\sin(s)\right|_0^{ct-x}\\
+        &= \frac{1}{2c}(\sin(x+ct) + \sin(ct-x))
+    \end{align*}
+    We now have our final solution that
+    \[\boxed{u(x,t) = \begin{cases}
+       \frac{1}{2c}(\sin(x+ct) - \sin(x-ct)) & x \geq ct\\
+        \frac{1}{2c}(\sin(x+ct) + \sin(ct-x)) & 0 \leq x < ct
+    \end{cases}}\]
+
+    \item In our problem, no waves are generated on the boundary. As such, we can solve the problem like a full-line problem via an odd extension (since $u|_{x=0} = 0$):
+    \[\phi_{odd}(x) = \begin{cases}
+        \phi(x) & x > 0\\
+        0 & x = 0\\
+        -\phi(-x) & x < 0
+    \end{cases}.\]
+    This allows us to rewrite the problem using D'Alembert's formula as
+    \[u(x,t) = \frac{1}{2}(\phi_{odd}(x+ct) + \phi_{odd}(x-ct)) + \frac{1}{2c}\int_{x-ct}^{x+ct}\psi_{odd}(s)\,ds.\]
+    There are two cases to consider: $x \geq ct$ and $0 < x < ct$.\\
+    \underline{$x \geq ct$}: By the odd extension, this instance yields D'Alembert's formula
+    \begin{align*}
+        u(x,t) &= \frac{1}{2}(\phi(x+ct) + \phi(x-ct)) + \frac{1}{2c}\int_{x-ct}^{x+ct}\psi(s)\,ds\\
+        u(x,t) &= \frac{1}{2c}\int_{x-ct}^{x+ct}\sin{(s)}\,ds
+    \end{align*}
+    \underline{$0 < x < ct$}: The odd extension says to change the sign of both $\phi$ and $x$. As such, we have
+    \[u(x,t) = \frac{1}{2}(\phi(x+ct) - \phi(ct-x)) + \frac{1}{2c}\int_{ct-x}^{x+ct}\psi(s)\,ds\]
+    For the purposes of this problem, we take $\phi(x) = 0$ and $\psi(x) = \sin(x)$. We integrate in the first case to get 
+    \begin{align*}
+        \frac{1}{2c}\int_{x-ct}^{x+ct}\sin(s)ds &= -\left.\frac{1}{2c}\cos(s)\right|_{x-ct}^{x+ct}\\
+        &=\frac{1}{2c}(\cos(x-ct) - \cos(x+ct))
+    \end{align*}
+
+    We integrate in the second case to get
+    \begin{align*}
+        \frac{1}{2c}\int_{ct-x}^{x+ct}\sin(s)ds &= -\left.\frac{1}{2c}\cos(s)\right|_{ct-x}^{x+ct}\\
+        &= -\frac{1}{2c} [\cos{(x+ct)} - \cos{(ct-x)}]
+    \end{align*}
+    Since cosine is even, $\cos(-x) = \cos(x)$, so we now have our final solution that, when $0 < x < ct$,
+    \[u(x,t) = \frac{1}{2c}(\cos(x-ct) - \cos(x+ct))\]
+    Therefore, our final solution is
+    \[\boxed{u(x,t) = \begin{cases}
+        \frac{1}{2c}(\cos{(x-ct)} - \cos{(x+ct)} ) & x \geq ct\\
+        \frac{1}{2c}(\cos{(x-ct)} - \cos{(x+ct)} ) & 0 \leq x < ct
+    \end{cases}}\]
+
+    \item In this problem, $g(x)=0 \text{ and } h(x) = \sin{(x)}$ and there is a Neumann condition, meaning that this problem can be solved with an even extension. Therefore, we have
+    \[\phi_{even}(x) = \begin{cases}
+        \phi(x) & x > 0\\
+        0 & x = 0\\
+        \phi(-x) & x < 0
+    \end{cases}.\]
+    and D'Alembert's formula can be rewritten as
+    \[u(x,t) = \frac{1}{2}(\phi_{even}(x+ct) + \phi_{even}(x-ct)) + \frac{1}{2c}\int_{x-ct}^{x+ct}\psi_{even}(s)\,ds.\]
+    \underline{$x \geq ct$}: This is just the normal form of D'Alembert's formula:
+    \begin{align*}
+        u(x,t) &= \frac{1}{2c}\int_{x-ct}^{x+ct}\psi_{even}(s)\,ds\\
+        u(x,t) &= \frac{1}{2c}\int_{x-ct}^{x+ct}\sin{(s)}\,ds\\
+        u(x,t) &= -\frac{1}{2c} \cos{(s)}|_{x-ct}^{x+ct}\,ds\\
+        u(x,t) &= \frac{1}{2c} [\cos{(x-ct)} - \cos{(x+ct)}]
+    \end{align*}
+    \underline{$0 < x < ct$}: The even function will affect D'Alembert's formula and will now be written as:
+    \[u(x,t) = \frac{1}{2}(g(x+ct) + g(ct-x)) + \frac{1}{2c}\left[\int_0^{x+ct}h(s)\,ds + \int_0^{ct-x}h(s)\,ds\right]\]
+    Since $g(x) = 0$, we only have to worry about the integration:
+    \begin{align*}
+        u(x,t) &= \frac{1}{2c} \left[\int_0^{x+ct}h(s)\,ds + \int_0^{ct-x}h(s)\,ds\right]\\
+        u(x,t) &= \frac{1}{2c} \left[\int_0^{x+ct}\sin{(s)}\,ds + \int_0^{ct-x}\sin{(s)}\,ds\right]\\
+        u(x,t) &= \frac{1}{2c} \left[ -\cos{(s)}|_0^{x+ct} - \cos{(s)}|_0^{ct-x} \right]\\
+        u(x,t) &= \frac{1}{2c} \left[ 1 - \cos{(x+ct)} - [ \cos{(ct-x)} - 1 ] \right]\\
+        u(x,t) &= \frac{1}{2c} \left[ 2 - \cos{(x+ct)} - \cos{(ct-x)} \right]\\
+    \end{align*}
+    The solution for this wave equation is
+    \[\boxed{u(x,t) = \begin{cases}
+        \frac{1}{2c}(\cos{(x-ct)} - \cos{(x+ct)} ) & x \geq ct\\
+        \frac{1}{2c}(2 - \cos{(x+ct)} - \cos{(ct-x)} ) & 0 \leq x < ct
+    \end{cases}}\]
+
+    \item Since no waves are generated on the boundary, we can solve this like a full line problem via an odd extension. Define
+    \[\phi_{odd}(x) = \begin{cases}
+        \phi(x) & x > 0\\
+        0 & x = 0\\
+        -\phi(-x) & x < 0
+    \end{cases}.\]
+    We can now use D'Alembert's Formula
+    \[u(x,t) = \frac{1}{2}(\phi_{odd}(x+ct) + \phi_{odd}(x-ct)) + \frac{1}{2c}\int_{x-ct}^{x+ct}\psi_{odd}(s)\,ds.\]
+    For $x \geq ct$, this results in the regular form of D'Alembert's formula:
+    \[u(x,t) = \frac{1}{2}(\phi(x+ct) + \phi(x-ct)) + \frac{1}{2c}\int_{x-ct}^{x+ct}\psi(s)\,ds.\]
+    Otherwise, we have to modify it per the definition of the odd extension:
+    \[u(x,t) = \frac{1}{2}(\phi(x+ct) - \phi(ct-x)) + \frac{1}{2c}\int_{ct-x}^{x+ct}\psi(s)\,ds\]
+    For the purposes of this problem, we take $\phi(x) = \cos(x)$ and $\psi(x) = 0$. Note that since cosine is an even function, $\cos(x) = \cos(-x)$. We now have our final solution that
+    \[\boxed{u(x,t) = \begin{cases}
+        \frac{1}{2}(\cos(x+ct) + \cos(x-ct)) & x \geq ct\\
+        \frac{1}{2}(\cos(x+ct) - \cos(x-ct)) & 0 \leq x < ct
+    \end{cases}}\]
+
+    \item This problem has a Neumann condition, so we have to utilize an even extension.
+    \[\phi_{even}(x) = \begin{cases}
+        \phi(x) & x > 0\\
+        0 & x = 0\\
+        \phi(-x) & x < 0
+    \end{cases}.\]
+    Which rewrites D'Alembert's equation as
+    \[u(x,t) = \frac{1}{2}(\phi_{even}(x+ct) + \phi_{even}(x-ct)) + \frac{1}{2c}\int_{x-ct}^{x+ct}\psi_{even}(s)\,ds.\]
+    Since $\psi{(x)} = 0$, no integration is needed, and we only use the first part of the equation is used.
+    \underline{$x \geq ct$}: The equation just becomes D'Alembert's equation.
+    \begin{align*}
+        u(x,t) &= \frac{1}{2}(\phi_{even}(x+ct) + \phi_{even}(x-ct))\\
+        u(x,t) &= \frac{1}{2}(\cos{(x+ct)} + \cos{(x-ct)})
+    \end{align*}
+    \underline{$0 < x < ct$}: We have to use a rewritten form of the equation for these:
+    \begin{align*}
+        u(x,t) &= \frac{1}{2}(\phi(x+ct) + \phi(ct-x)) + \frac{1}{2c}\left[\int_0^{x+ct}\psi(s)\,ds + \int_0^{ct-x}\psi(s)\,ds\right]\\
+        u(x,t) &= \frac{1}{2}(\cos{(x+ct)} + \cos{(ct-x)})
+    \end{align*}
+    Therefore, the solution to the wave equation with these boundary conditions is:
+    \[\boxed{u(x,t) = \begin{cases}
+        \frac{1}{2}(\cos{(x+ct)} + \cos{(x-ct)}) & x \geq ct\\
+        \frac{1}{2}(\cos{(x+ct)} + \cos{(ct-x)}) & 0 \leq x < ct
+    \end{cases}}\]
+
+    \item Since no waves are generated on the boundary, we can solve this like a full line problem via an odd extension. Define
+    \[\phi_{odd}(x) = \begin{cases}
+        \phi(x) & x > 0\\
+        0 & x = 0\\
+        -\phi(-x) & x < 0
+    \end{cases}.\]
+    We can now use D'Alembert's Formula
+    \[u(x,t) = \frac{1}{2}(\phi_{odd}(x+ct) + \phi_{odd}(x-ct)) + \frac{1}{2c}\int_{x-ct}^{x+ct}\psi_{odd}(s)\,ds.\]
+    For $x > ct$, this results in the regular form of D'Alembert's formula:
+    \[u(x,t) = \frac{1}{2}(\phi(x+ct) + \phi(x-ct)) + \frac{1}{2c}\int_{x-ct}^{x+ct}\psi(s)\,ds.\]
+    Otherwise, we have to modify it per the definition of the odd extension:
+    \[u(x,t) = \frac{1}{2}(\phi(x+ct) - \phi(ct-x)) + \frac{1}{2c}\int_{ct-x}^{x+ct}\psi(s)\,ds\]
+    For the purposes of this problem, we take $\phi(x) = \sin(x)$ and $\psi(x) = 0$. Note that since sine is an odd function, $\sin(x) = -\sin(-x)$. We now have our final solution that
+    \[\boxed{u(x,t) = \frac{1}{2}(\sin(x+ct) + \sin(x-ct))}\]
+
+    \item As the initial boundary conditions show, we can utilize an even extension to solve this:
+    \[\phi_{even}(x) = \begin{cases}
+        \phi(x) & x > 0\\
+        0 & x = 0\\
+        \phi(-x) & x < 0
+    \end{cases}.\]
+    D'Alembert's equation now looks like this:
+    \[u(x,t) = \frac{1}{2}(\phi_{even}(x+ct) + \phi_{even}(x-ct)) + \frac{1}{2c}\int_{x-ct}^{x+ct}\psi_{even}(s)\,ds.\]
+    $\psi{(x)} = 0$, so integration is not needed.\\
+    \underline{$x \geq ct$}: This is just D'Alembert's equation.
+    \begin{align*}
+        u(x,t) &= \frac{1}{2}(\phi_{even}(x+ct) + \phi_{even}(x-ct))\\
+        u(x,t) &= \frac{1}{2}(\sin{(x+ct)} + \sin{(x-ct)})
+    \end{align*}
+    \underline{$0 < x < ct$}: The rewritten form of D'Alembert's equation now looks like this:
+    \begin{align*}
+        u(x,t) &= \frac{1}{2}(\phi(x+ct) + \phi(ct-x)) + \frac{1}{2c}\left[\int_0^{x+ct}\psi(s)\,ds + \int_0^{ct-x}\psi(s)\,ds\right]\\
+        u(x,t) &= \frac{1}{2}(\sin{(x+ct)} + \sin{(ct-x)})
+    \end{align*}
+    Therefore, the solution to the wave equation with these boundary conditions is:
+    \[\boxed{u(x,t) = \begin{cases}
+        \frac{1}{2}(\sin{(x+ct)} + \sin{(x-ct)}) & x \geq ct\\
+        \frac{1}{2}(\sin{(x+ct)} + \sin{(ct-x)}) & 0 \leq x < ct
+    \end{cases}}\]
+
+    \item Since no waves are generated on the boundary, we can solve this like a full line problem via an even extension (Neumann boundary conditions). Define
+    \[\phi_{even}(x) = \begin{cases}
+        \phi(x) & x > 0\\
+        0 & x = 0\\
+        \phi(-x) & x < 0
+    \end{cases}.\]
+    We can now use D'Alembert's Formula
+    \[u(x,t) = \frac{1}{2}(\phi_{even}(x+ct) + \phi_{even}(x-ct)) + \frac{1}{2c}\int_{x-ct}^{x+ct}\psi_{even}(s)\,ds.\]
+    For $x > ct$, this results in the regular form of D'Alembert's formula:
+    \[u(x,t) = \frac{1}{2}(\phi(x+ct) + \phi(x-ct)) + \frac{1}{2c}\int_{x-ct}^{x+ct}\psi(s)\,ds.\]
+    Otherwise, we have to modify it per the definition of the even extension:
+    \[u(x,t) = \frac{1}{2}(\phi(x+ct) + \phi(ct-x)) + \frac{1}{2c}\left(\int_{0}^{ct-x}\psi(s)\,ds+\int_{0}^{x+ct} \psi(s)\,ds\right)\]
+    For the purposes of this problem, we take $\phi(x) = 1$ and $\psi(x) = 0$. We now have our final solution that
+    \[\boxed{u(x,t) = \begin{cases}
+        1 & x \geq ct\\
+        1 & 0 \leq x < ct
+    \end{cases}}\]
+
+    \item Since no waves are generated on the boundary, we can solve this like a full line problem via an odd extension. Define
+    \[\phi_{odd}(x) = \begin{cases}
+        \phi(x) & x > 0\\
+        0 & x = 0\\
+        -\phi(-x) & x < 0
+    \end{cases}.\]
+    We can now use D'Alembert's Formula
+    \[u(x,t) = \frac{1}{2}(\phi_{odd}(x+ct) + \phi_{odd}(x-ct)) + \frac{1}{2c}\int_{x-ct}^{x+ct}\psi_{odd}(s)\,ds.\]
+    For $x > ct$, this results in the regular form of D'Alembert's formula:
+    \[u(x,t) = \frac{1}{2}(\phi(x+ct) + \phi(x-ct)) + \frac{1}{2c}\int_{x-ct}^{x+ct}\psi(s)\,ds.\]
+    Otherwise, we have to modify it per the definition of the odd extension:
+    \[u(x,t) = \frac{1}{2}(\phi(x+ct) - \phi(ct-x)) + \frac{1}{2c}\int_{ct-x}^{x+ct}\psi(s)\,ds\]
+    For the purposes of this problem, we take $\phi(x) = 1$ and $\psi(x) = 0$. Note that since cosine is an even function, $\cos(x) = \cos(-x)$. We now have our final solution that
+    \[\boxed{u(x,t) = \begin{cases}
+        1 & x \geq ct\\
+        0 & 0 \leq x < ct
+    \end{cases}}\]
+
+    \item The Neumann condition indicates that this problem can be solved with an even extension, or
+    \[\phi_{even}(x) = \begin{cases}
+        \phi(x) & x > 0\\
+        0 & x = 0\\
+        \phi(-x) & x < 0
+    \end{cases}.\]
+    The D'Alembert formula is then rewritten as
+    \begin{align*}
+        u(x,t) &= \frac{1}{2}(\phi_{even}(x+ct) + \phi_{even}(x-ct)) + \frac{1}{2c}\int_{x-ct}^{x+ct}\psi_{even}(s)\,ds\\
+        u(x,t) &= \frac{1}{2}(\phi(x+ct) + \phi(ct-x)) + \frac{1}{2c}\left[\int_0^{x+ct}\psi(s)\,ds + \int_0^{ct-x}\psi(s)\,ds\right]
+    \end{align*}
+    Since $g(x) = 0$ (in this formula, this would be $\phi$), we will need to integrate for this wave equation and its boundaries.\\
+    \underline{$x \geq ct$}: Since this section of the first quadrant is not affected, this is just D'Alembert's formula:
+    \begin{align*}
+        u(x,t) &= \frac{1}{2}(\phi(x+ct) + \phi(x-ct)) + \frac{1}{2c}\int_{x-ct}^{x+ct}\psi(s)\,ds\\
+        u(x,t) &= \frac{1}{2c}\int_{x-ct}^{x+ct}ds\\
+        u(x,t) &= \frac{1}{2c}s|_{x-ct}^{x+ct}\\
+        u(x,t) &= \frac{1}{2c} [x+ct+ct-x]\\
+        u(x,t)&= t
+    \end{align*}
+    \underline{$0 < x < ct$}: We need to use the modified version of D'Alembert's formula.
+    \begin{align*}
+        u(x,t)&= \frac{1}{2c}\left[\int_0^{x+ct}\psi(s)\,ds + \int_0^{ct-x}\psi(s)\,ds\right]\\
+        u(x,t)&= \frac{1}{2c}\left[\int_0^{x+ct}ds + \int_0^{ct-x}ds\right]\\
+        u(x,t)&= \frac{1}{2c}\left[s|_0^{x+ct} + s|_0^{ct-x}\right]\\
+        u(x,t)&= \frac{1}{2c}\left[x+ct + ct-x\right]\\
+        u(x,t)&= t
+    \end{align*}
+    In other words, whether we have $x \geq ct \text{ or } 0 < x < ct$, the solution is 
+    \[\boxed{u(x,t) = t}\]
+    
+    \item The existence of a Dirichlet boundary condition suggest an odd extension
+    \[\phi_{odd}(x) = \begin{cases}
+        \phi(x) & x > 0\\
+        0 & x = 0\\
+        -\phi(-x) & x < 0
+    \end{cases}\]
+    on D'Alembert's formula,
+    \[u(x,t) = \frac{1}{2}(\phi(x+ct) + \phi(x-ct)) + \frac{1}{2c}\int_{x-ct}^{x+ct}\psi(s)\,ds.\]
+    A final detail to note is that $\phi(x)$ ($g(x)$ for the sake of the problem) is $0$, so we will need to integrate.
+    \underline{$x \geq ct$}: We can just use D'Alembert's formula for this region ($\psi$ written as $h$ to be consistent with the problem, as we have done for the previous problems):
+    \begin{align*}
+        u(x,t)&= \frac{1}{2c}\int_{x-ct}^{x+ct}h(s)\,ds\\
+        u(x,t)&= \frac{1}{2c}\int_{x-ct}^{x+ct}ds\\
+        u(x,t)&= \frac{1}{2c}s|_{x-ct}^{x+ct}\\
+        u(x,t)&= \frac{1}{2c}[x+ct-x+ct]\\
+        u(x,t)&= t
+    \end{align*}
+    \underline{$0 < x < ct$}: We need to use a form of D'Alembert's formula that uses the odd extension to get our answer:
+    \begin{align*}
+            u(x,t) &= \frac{1}{2}(\phi_{odd}(x+ct) + \phi_{odd}(x-ct)) + \frac{1}{2c}\int_{x-ct}^{x+ct}\psi_{odd}(s)\,ds\\
+            u(x,t) &= \frac{1}{2}(\phi(x+ct) - \phi(ct-x)) + \frac{1}{2c}\int_{ct-x}^{x+ct}\psi(s)\,ds\\
+            u(x,t) &= \frac{1}{2c}\int_{ct-x}^{x+ct}ds\\
+            u(x,t) &= \frac{1}{2c}s|_{ct-x}^{x+ct}\\
+            u(x,t) &= \frac{1}{2c}[x+ct - (ct-x)]\\
+            u(x,t) &= \frac{x}{c}
+    \end{align*}
+    Therefore, the solution to this wave equation problem is:
+    \[\boxed{u(x,t) = \begin{cases}
+        t & x \geq ct\\
+        \frac{x}{c} & 0 \leq x < ct
+    \end{cases}}\]
+\end{enumerate}
+\end{ans}
+
+\end{document}
