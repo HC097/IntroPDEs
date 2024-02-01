@@ -1,0 +1,353 @@
+\documentclass{article}
+\title{Intro to PDEs: Ch 1 HW}
+\author{Logan Rhyne, Harley Combest, Roy Galang}
+\usepackage[T1]{fontenc}
+\usepackage{amsfonts, amsmath, amsthm, amssymb}
+\usepackage{mathtools, bigints, empheq}
+\usepackage{graphicx, wrapfig, xcolor}
+\usepackage{stackrel}
+\usepackage[shortlabels]{enumitem}
+\usepackage[margin=1.0in]{geometry}
+\setlength{\parindent}{0pt}
+\theoremstyle{definition}
+\newtheorem*{lemma}{Lemma}
+\newtheorem*{conj}{Conjecture}
+\newtheorem{prob}{}
+\newtheorem*{pf}{Proof}
+\newtheorem*{dpf}{Disproof}
+\renewcommand\qedsymbol{$\blacksquare$}
+\renewcommand{\emptyset}{\varnothing}
+\renewcommand{\epsilon}{\varepsilon}
+\newenvironment{disproof}{\begin{proof}[Disproof]}{\end{proof}}
+\newenvironment{ans}{\begin{proof}[Answer]\renewcommand{\qedsymbol}{}}{\end{proof}}
+\newenvironment{boldenv}{\bfseries\boldmath}{}
+
+\DeclareMathOperator{\ran}{range}
+
+\begin{document}
+	
+	\maketitle
+	
+	\begin{boldenv}
+		\underline{Problem 1}. Consider first order equations and determine if they are linear homogeneous, linear inhomogeneous, or nonlinear ($u$
+		is an unknown function); for nonlinear equations, indicate if they are also semilinear, or quasilinear:
+		\begin{enumerate}[(1), series=problems]
+			\item $u_t + xu_x = 0$
+			\item $u_t + uu_x = 0$
+			\item $u_t + xu_x - u = 0$
+			\item $u_t + uu_x + x = 0$
+			\item $u_t + u_x - u^2 = 0$
+			\item $u_t^2 - u_x^2 - 1 = 0$
+			\item $u_x^2 + u_y^2 - 1 = 0$
+			\item $xu_x + yu_y + zu_z = 0$
+			\item $u_x^2 + u_y^2 + u_z^2 - 1 = 0$
+			\item $u_t + u_x^2 + u_y^2 = 0$
+		\end{enumerate}
+	\end{boldenv}
+	
+	\begin{ans}
+		\begin{enumerate}[(1), series=answers]
+			
+			\item Let $\mathcal{L}$ be the  operator such that $\mathcal{L}(u)$ represents the left side of the PDE above. Let $c\in\mathbb{R}$. Then
+			\begin{align*}
+				\mathcal{L}(u+v) &= (u_t + v_t) + x(u_x + v_x)\\
+				&= (u_t + xu_x) + (v_t + xv_x)\\
+				&= \mathcal{L}(u) + \mathcal{L}(v)\\\\
+				\mathcal{L}(cu) &= (cu_t) + x(cu_x)\\
+				&=c(u_t + xu_x) = c\mathcal{L}(u).
+			\end{align*}
+			We have shown that $\mathcal{L}$ is a linear operator, and since there are no functions other than $u$ to be moved to the RHS, this first-order PDE is linear homogeneous.
+			
+			\item Let $\mathcal{L}$ be the  operator such that $\mathcal{L}(u)$ represents the left side of the PDE above. Let $c\in\mathbb{R}$. Then
+			\begin{align*}
+				\mathcal{L}(u+v) &= u_t + v_t + (u+v)(u_x + v_x)\\
+				&= u_t + v_t + uu_x + uv_x + vu_x + vv_x\\
+				&= \mathcal{L}(u) + \mathcal{L}(v) + uv_x + vu_x
+			\end{align*}
+			Thus, it is nonlinear. In fact, since the coefficient of $u_x$ depends on $u$, this is quasilinear.
+			
+			\item Since this PDE follows both linearity operations, this PDE is linear. In addition, the function on the right-hand side is equal to 0, therefore, this PDE is linear homogeneous.
+			
+			\item We only need to use one of the linearity properties to prove that this PDE is nonlinear. Since the coefficient of $u_x$ depends on $u$, this PDE is quasilinear.
+			
+			\item With one of the linearity properties, this PDE is found to be nonlinear. None of the coefficients of the partial derivatives depend on $u$, therefore, this PDE is semilinear.
+			
+			\item Not only does this PDE fail the linearity properties test, it also has derivatives that are squared. Therefore, the PDE is fully nonlinear.
+			
+			\item Similar to the previous PDE, there are squared derivatives. In addition, the PDE does not meet the properties of linearity. This PDE is fully nonlinear.
+			
+			\item Checking for linearity proves this PDE is linear. Since the right-hand side is equal to 0, the PDE is linear homogeneous.
+			
+			\item Since the derivatives are squared, this PDE is fully nonlinear.
+			
+			\item Since there are squared derivatives, this PDE is fully nonlinear.
+		\end{enumerate}
+		
+	\end{ans}
+	\begin{boldenv}
+		\underline{Problem 2}. Consider equations and determine their order; determine if they are linear homogeneous, linear inhomogeneous or non-linear ($u$ is an unknown function); you need to provide \textit{the most precise} (that means the narrow, but still correct) description:
+		\begin{enumerate}[resume*=problems]
+			\item $u_t + (1+x^2)u_{xx} = 0$
+			\item $u_t - (1 + u^2)u_{xx} = 0$
+			\item $u_t + u_{xxx} = 0$
+			\item $u_t + uu_x + u_{xxx} = 0$
+			\item $u_{tt} + u_{xxxx} = 0$
+			\item $u_{tt} + u_{xxxx} + u = 0$
+			\item $u_{tt} + u_{xxxx} + \sin{(x)} = 0$
+			\item $u_{tt} + u_{xxxx} + \sin{(x)}\sin{(u)} = 0$
+		\end{enumerate}
+	\end{boldenv}
+	
+	\begin{ans}
+		\begin{enumerate}[resume*=answers]
+			\item This PDE follows linearity rules and has a zero on the right-hand side. Therefore, this is a linear homogeneous equation with order 2.
+			
+			\item This is a second-order PDE that fails the linearity properties, so this is nonlinear. Since there is a coefficient of a derivative that relies on $u$, this PDE is quasilinear.
+			
+			\item The PDE involves a third derivative, follows linearity rules, and its right hand side is equal to zero. Therefore, this is a third-order linear homogeneous PDE.
+			
+			\item By the $u_{xxx}$ term, this is a third-order equation. Additionally, since it has a coefficient dependent on $u$ and no nonlinear derivatives, this would be a quasilinear PDE.
+			
+			\item By the $u_{xxxx}$ term, it is a fourth-order equation. Since the RHS is equal to zero, the coefficients are independent of $u$, and the derivatives are linear (in this case there is no forcing term), this is a linear homogeneous PDE.
+			
+			\item By the $u_{xxxx}$ term, it is a fourth-order equation. Since the RHS is equal to zero, the coefficients are independent of $u$, and the derivatives and forcing term are linear, this PDE is linear homogeneous.
+			
+			\item By the $u_{xxxx}$ term, it is a fourth-order equation. Since the the coefficients are independent of $u$ and the derivatives are linear (in this case there is no forcing term), this PDE is linear. However, since $\sin(x)$ is not a coefficient of $u$ or its derivatives, moving it to the RHS shows that this is a linear inhomogeneous PDE.
+			
+			\item By the $u_{xxxx}$ term, it is a fourth-order equation. The derivatives are all linear, but since moving the $\sin(x)\sin(u)$ term to the RHS yields a function $f(x,u)$ on the RHS, this classifies as semilinear.
+		\end{enumerate}
+	\end{ans}
+	
+	\begin{boldenv}
+		\underline{Problem 3}. Find the general solutions to the following equations:
+		\begin{enumerate}[resume*=problems]
+			\item $u_{xy} = 0$
+			\item $u_{xy} = 2u_x$
+			\item $u_{xy} = e^{x+y}$
+			\item $u_{xy} = 2u_x + e^{x+y}$
+		\end{enumerate}
+		\textit{Hint.} Introduce $v=u_x$ and find it first.
+	\end{boldenv}
+	
+	\begin{ans}
+		\begin{enumerate}[resume*=answers]
+			\item Integrating with respect to $y$ give us that $u_x = \Phi_1(x)$. Integrating again, this time with respect to $x$ gives us that $\boxed{u(x,y) = \Phi_2(x) + \Phi_3(y)}$ where $\Phi_2(x) = \int \Phi_1(x)dx$.
+			
+			\item We first substitute $v=u_x$ to get that $v_y = 2v$. We then have the following:
+			\begin{align*}
+				\frac{\partial v}{\partial y} &= 2v\\
+				\int\frac{dv}{v} &= \int2\, d y\\
+				\ln{|v|} &= 2y + C(x)\\
+				\ln{|u_x|} &= 2y + C(x) \tag{Substituting back in $u_x$ for v}\\
+				u_x &= e^{2y}e^{C(x)}\\
+				\int u_x\,dx &= \int g_1(x)e^{2y}dx \tag{Letting $g_1(x) = e^{C(x)}$}\\
+				\Aboxed{u(x,y) &= g_2(x)e^{2y} + f(y)} \tag{Letting $g_2(x) = \int g_1(x)dx$}
+			\end{align*}
+			
+			\item We begin by separating $e^{x+y}$ into $e^xe^y$. We then integrate both sides and get the following:
+			\begin{align*}
+				\int u_{xy}dy &= \int e^xe^y dy \\
+				u_x &= e^xe^y + f_1(x)\\
+				\int u_xdx &= \int\left(e^xe^y + f_1(x)\right)dx\\
+				\Aboxed{u(x,y) &= e^xe^y + f_2(x) + g(y)} \tag{Where $f_2(x) = \int f_1(x)dx$}
+			\end{align*}
+			
+			\item First we substitute $v = u_x$ to get $v_y = 2v + e^{x+y}$. It then follows that
+			\begin{align*}
+				v_y &= 2v + e^{x+y}\\
+				v_y - 2v &= e^{x+y}\\
+				e^{-2y}v_y - 2e^{-2y}v &= e^{-2y}e^{x+y} = e^{x-y}\\
+				\frac{\partial}{\partial y}(ve^{-2y}) &= e^{x-y}\\
+				\int \frac{\partial}{\partial y}(ve^{-2y})dy &= \int e^{x-y}dy\\
+				ve^{-2y} &= -e^{x-y} + f_1(x)\\
+				\frac{ve^{-2y}}{e^{-2y}} &= \frac{-e^{x-y} + f_1(x)}{e^{-2y}}\\
+				v &= -e^{x+y} + e^{2y}f_1(x)\\
+				u_x &= -e^{x+y} + e^{2y}f_1(x)\\
+				\Aboxed{u(x,y) &= -e^{x+y} + e^{2y}f_2(x) + g(y)} \tag{Note that $f_2(x) = \int f_1(x)dx$}
+			\end{align*}
+		\end{enumerate}
+	\end{ans}
+	
+	\begin{boldenv}
+		\underline{Problem 4}. Find the general solutions to the following equations:
+		\begin{enumerate}[resume*=problems]
+			\item $uu_{xy} = u_xu_y$
+			\item $uu_{xy} = 2u_xu_y$
+			\item $u_{xy} = u_xu_y$
+		\end{enumerate}
+		\textit{Hint.} Divide two first equations by $uu_x$ and observe that both the right and left-hand expressions are derivative with respect to $y$ of $\ln(u_x)$ and $\ln(u)$ respectively. Divide the last equation by $u_x$.
+	\end{boldenv}
+	
+	\begin{ans}
+		\begin{enumerate}[resume*=answers]
+			\item Dividing both sides by $uu_x$ gives us that $\frac{u_{xy}}{u_x} = \frac{u_x}{u}$. We see that equivalently:
+			\begin{align*}
+				\partial_y(\ln(u_x)) &= \partial_y(\ln(u))\\
+				\int \partial_y(\ln(u_x))dy &= \int \partial_y(\ln(u))dy\\
+				\ln(u_x) &= \ln(u) + f_1(x)\\
+				u_x &= ue^{f_1(x)} = uf_2(x)\\
+				\frac{u_x}{u} &= f_2(x)\\
+				\partial_x(\ln(u)) &= f_2(x)\\
+				\ln(u) &= f_3(x) + g_1(y)\\
+				\Aboxed{u(x,y) &= e^{f_3(x)+ g_1(y)} = f_4(x)g_2(y)}
+			\end{align*}
+			
+			\item Again, we divide by $uu_x$, which gives us that $\frac{u_{xy}}{u_x} = \frac{2u_x}{u}$. We then get
+			\begin{align*}
+				\partial_y(\ln(u_x)) &= \partial_y(2 \ln(u)) = \partial_y(\ln(u^2))\\
+				\ln(u_x) &= \ln(u^2) + f_1(x)\\
+				e^{\ln(u_x)} &= e^{\ln(u^2) + f_1(x)}\\
+				u_x &= u^2f_2(x)\\
+				\frac{u_x}{u^2} &= f_2(x)\\
+				\partial_x\left(-\frac{1}{u}\right) &= f_2(x)\\
+				-\frac{1}{u} &= f_3(x) + g(y)\\
+				\Aboxed{u(x,y) &= -(f_3(x) + g(y))^{-1}}
+			\end{align*}
+			
+			\item As the hint gives, we divide by $u_x$ on both sides, getting rid of the $u_x$ on the right-hand side. This allows us to use the same property as the previous problems, yielding:
+			\begin{align*}
+				\partial_y(\ln(u_x)) &= u_y\\
+				\int \partial_y(\ln(u_x)) &= \int u_y\\
+				\ln(u_x) &= u + f_1(x)\\
+				u_x &= f_2(x)e^u\\
+				e^{-u}u_x &= f_2(x)\\
+				\frac{\partial}{\partial_x} (e^{-u}) &= f_2(x)\\
+				-e^{-u} &= f_3(x) + g_1(y)\\
+				-u &= \ln(f_4(x) + g_2(y))\\
+				\Aboxed{u &= -\ln(f_4(x) + g_2(y))}
+			\end{align*}
+			
+		\end{enumerate}
+	\end{ans}
+	
+	\begin{boldenv}
+		\underline{Problem 5}. Find general solutions to the following \textit{linear homogeneous equations}:
+		\begin{enumerate}[resume*=problems]
+			\item $u_{xxy} = 0$
+			\item $u_{xxyy} = 0$
+			\item $u_{xxxy} = 0$
+			\item $u_{xyz} = 0$
+			\item $u_{xyzz} = 0$
+			\item $u_{xxy} = \sin(x)\sin(y)$
+			\item $u_{xxy} = \sin(x) + \sin(y)$
+			\item $u_{xxyy} = \sin(x)\sin(y)$
+			\item $u_{xxyy} = \sin(x) + \sin(y)$
+			\item $u_{xxxy} = \sin(x)\sin(y)$
+			\item $u_{xxxy} = \sin(x) + \sin(y)$
+			\item $u_{xyz} = \sin(x)\sin(y)\sin(z)$
+			\item $u_{xyz} = \sin(x) + \sin(y) + \sin(z)$
+			\item $u_{xyz} = \sin(x) + \sin(y)\sin(z)$
+		\end{enumerate}
+	\end{boldenv}
+	
+	\begin{ans}
+		\begin{enumerate}[resume*=answers]
+			\item \begin{align*}
+				u_{\mathrm{xxy}} &= 0\\
+				u_{\mathrm{xy}} &= \Phi_1(y)\\
+				u_y &= \Phi_1(y)x + \psi(y) \\
+				\Aboxed{u(x,y) &= \Phi_2(y)x + \psi(y) + \varphi(x)}
+			\end{align*}
+			
+			
+			\item \begin{align*}
+				u_{\mathrm{xxyy}} &= 0\\
+				u_{\mathrm{xxy}} &= \varphi_1(x) \\
+				u_{\mathrm{xx}} &= y\varphi_1(x) + \beta_1(x) \\
+				u_x &= y\varphi_2(x) + \beta_2(x) + \gamma_1(y) \\
+				\Aboxed{u(x, y) &= y\varphi_3(x) + \beta_3(x) + x\gamma_1(y) + \rho_1(y)}
+			\end{align*}
+				
+				\item \begin{align*}
+				u_{\mathrm{xxxy}} &= 0 \\
+				u_{\mathrm{xxy}} &= \varphi_1(y)\\ 
+				u_{\mathrm{xy}} &= \varphi_1(y)x + \beta_1(y) \\
+				u_y &= \frac{1}{2}\varphi_1(x)x^2 + \beta_1(y)x + \gamma_1(y) 	
+				\\ \Aboxed{u(x, y) &= \frac{1}{2}x^2\varphi_2(x) + x\beta_2(x) + x\gamma_2(y) + \rho_1(x)}
+			\end{align*}
+				
+				\item \begin{align*}
+					u_{\mathrm{xyz}} &= 0 
+					\\ u_{\mathrm{xy}} &= \varphi_1(x, y) 
+					\\ u_{\mathrm{x}} &= \varphi_2(x, y) + \beta_1(x, z)	
+					\\ \Aboxed{u(x, y) &= \varphi_3(x, y) + \beta_2(x) + \gamma_1(y,z)}
+				\end{align*}
+				
+				\item \begin{align*}
+					u_{\mathrm{xyzz}} &= 0 
+					\\ u_{\mathrm{xyz}} &= \varphi_1(x, y) 
+					\\ u_{\mathrm{xy}} &= z\varphi_1(x, y) + \beta_1(x, y)	
+					\\ u_x &= z\varphi_2(x, y) + \beta_2(x, y)	+ \gamma_1(x, z)
+					\\ \Aboxed{u(x, y) &= z\varphi_3(x, y) + \beta_3(x, y) + \gamma_2(x,z) + \rho_1(y, z)}
+				\end{align*}
+				
+				\item \begin{align*}
+					u_{\mathrm{xxy}} &= \sin(x)\sin(y) 
+					\\ u_{\mathrm{xx}} &= -\sin(x)\cos(y) + \alpha_1(x)
+					\\ u_x &= \cos(x)\cos(y) + \alpha_2(x) + \beta_1(y)
+					\\ \Aboxed{u(x,y) &= \sin(x)\cos(y) + \alpha_3(x) + x\beta(y) + \gamma(y)}
+				\end{align*}
+				
+				\item \begin{align*}
+					u_{\mathrm{xxy}} &= \sin(x)+\sin(y) 
+					\\ u_{\mathrm{xx}} &= y\sin(x) - \cos(y) + \alpha_1(x)
+					\\ u_x &= -y\cos(x) - x\cos(y) + \alpha_2(x) + \beta_1(y)
+					\\ \Aboxed{u(x,y) &= -y\sin(x) - \frac{1}{2}x^2\cos(y) + \alpha_3(x) + x\beta(y) + \gamma(y)}
+				\end{align*}
+				
+				\item \begin{align*}
+					u_{\mathrm{xxyy}} &= \sin(x)\sin(y) 
+					\\ u_{\mathrm{xxy}} &= -\sin(x)\cos(y) + \alpha_1(x)
+					\\ u_{\mathrm{xx}} &= -\sin(x)\sin(y) + y\alpha_1(x) + \beta_1(x)
+					\\ u_x &= \cos(x)\sin(y) + y\alpha_2(x) + \beta_2(x) + \gamma_1(y)
+					\\ \Aboxed{u(x,y) &= \sin(x)\sin(y) + y\alpha_3(x) + \beta_3(x) + x\gamma_1(y) + \delta_1(y)}
+				\end{align*}
+				
+				\item \begin{align*}
+					u_{\mathrm{xxyy}} &= \sin(x)+\sin(y) 
+					\\ u_{\mathrm{xxy}} &= y\sin(x) - \cos(y) + \alpha_1(x)
+					\\ u_{\mathrm{xx}} &= \frac{1}{2}y^2\sin(x) - \sin(y) + y\alpha_1(x) + \beta_1(x)
+					\\ u_x &= -\frac{1}{2}y^2\cos(x) - x\sin(y) + y\alpha_2(x) + \beta_2(x) + \gamma_1(y)
+					\\ \Aboxed{u(x,y) &= -\frac{1}{2}y^2\sin(x) - \frac{1}{2}x^2\sin(y) + y\alpha_3(x) + \beta_3(x) + x\gamma_1(y) +\delta_1(y)}
+				\end{align*}
+				
+				\item \begin{align*}
+					u_{\mathrm{xxxy}} &= \sin(x)\sin(y) 
+					\\ u_{\mathrm{xxx}} &= -\sin(x)\cos(y) + \alpha_1(x)
+					\\ u_{\mathrm{xx}} &= \cos(x)\cos(y) + \alpha_2(x) + \beta_1(y)
+					\\ u_x &= \sin(x)\cos(y) + \alpha_3(x) + x\beta_1(y) + \gamma_1(y)
+					\\ \Aboxed{u(x,y) &= -\cos(x)\cos(y) + \alpha_4(x) + \frac{1}{2}x^2\beta_1(y) + x\gamma_1(y) + \delta_1(y)}
+				\end{align*}
+				
+				\item \begin{align*}
+					u_{\mathrm{xxxy}} &= \sin(x)+\sin(y) 
+					\\ u_{\mathrm{xxx}} &= y\sin(x) - \cos(y) + \alpha_1(x)
+					\\ u_{\mathrm{xx}} &= -y\cos(x) - x\cos(y) + \alpha_2(x) + \beta_1(y)
+					\\ u_x &= -y\sin(x) - \frac{1}{2}x^2\cos(y) + \alpha_3(x) + x\beta_1(y) + \gamma_1(y)
+					\\ \Aboxed{u(x,y) &= y\cos(x) - \frac{1}{3}x^3\sin(y) + y\alpha_4(x) + \frac{1}{2}x^2\beta_1(y) + x\gamma_1(y) +\delta_1(y)}
+				\end{align*}
+				
+				\item \begin{align*}
+					u_{\mathrm{xyz}} &= \sin(x)\sin(y)\sin(z)
+					\\ u_{\mathrm{xy}} &= \sin(x)\sin(y)\cos(z) + \alpha_1(x,y)
+					\\ u_x &= \sin(x)\cos(y)\cos(z) + \alpha_2(x, y) + \beta_1(x, z)
+					\\ \Aboxed{u(x,y, z) &= -\cos(x)\cos(y)\cos(z) + z\alpha_2(x,y) + \beta_2(x, z) + \gamma_1(y, z)}
+				\end{align*}
+				
+				\item \begin{align*}
+					u_{\mathrm{xyz}} &= \sin(x)+\sin(y)+\sin(z)
+					\\ u_{\mathrm{xy}} &= z\sin(x) + z\cos(y) - \cos(z) + \alpha_1(x, y)
+					\\ u_x &=  yz\sin(x) - z\cos(y) - y\cos(z) + \alpha_2(x) + \beta_1(x,z)
+					\\ \Aboxed{u(x,y) &= -yz\cos(x) - xz\cos(y) + xy\cos(z) + \alpha_3(x, y) + \beta_2(x,z) +\delta_1(y,z)}
+				\end{align*}
+				
+				\item \begin{align*}
+					u_{\mathrm{xyz}} &= \sin(x)-\sin(y)\sin(z)
+					\\ u_{\mathrm{xy}} &= z\sin(x) - \sin(y)\cos(z) + \alpha_1(x, y)
+					\\ u_x &=  yz\sin(x) + \cos(y)\cos(z) + \alpha_2(x, y) + \beta_1(x,z)
+					\\ \Aboxed{u(x,y) &= -yz\cos(x) + x\cos(y)\cos(z) + \alpha_3(x, y) + \beta_2(x,z) +\delta_1(y,z)}
+				\end{align*}
+			\end{enumerate}
+		\end{ans}
+		
+	\end{document} 

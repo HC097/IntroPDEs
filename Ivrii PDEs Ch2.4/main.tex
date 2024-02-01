@@ -1,0 +1,193 @@
+\documentclass{article}
+\title{Intro to PDEs: Ch 2.4 HW}
+\author{Logan Rhyne, Harley Combest, Roy Galang, Jesse DiCenso}
+\usepackage[T1]{fontenc}
+\usepackage{amsfonts, amsmath, amsthm, amssymb}
+\usepackage{mathtools, bigints, empheq}
+\usepackage{graphicx, wrapfig, xcolor, float}
+\usepackage{stackrel}
+\usepackage{pgfplots}
+\usepackage[shortlabels]{enumitem}
+\usepackage[margin=1.0in]{geometry}
+\setlength{\parindent}{0pt}
+\theoremstyle{definition}
+\newtheorem*{lemma}{Lemma}
+\newtheorem*{conj}{Conjecture}
+\newtheorem{prob}{}
+\newtheorem*{pf}{Proof}
+\newtheorem*{dpf}{Disproof}
+\renewcommand\qedsymbol{$\blacksquare$}
+\renewcommand{\emptyset}{\varnothing}
+\renewcommand{\epsilon}{\varepsilon}
+\newenvironment{disproof}{\begin{proof}[Disproof]}{\end{proof}}
+\newenvironment{ans}{\begin{proof}[Answer]\renewcommand{\qedsymbol}{}}{\end{proof}}
+\newenvironment{boldenv}{\bfseries\boldmath}{}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\R}{\mathbb{R}}
+
+\pgfplotsset{compat=1.18}
+
+\DeclareMathOperator{\ran}{range}
+
+\begin{document}
+	
+	\maketitle
+	
+	\begin{boldenv}
+		\underline{Problem 1}. Solve the IVP
+            \[
+            \begin{cases}
+                u_{tt} - c^2u_{xx} = f(x,t)\\
+                u|_{t=0} = g(x)\\
+                u_t|_{t=0} = h(x)
+            \end{cases}
+            \]
+            with
+            \begin{enumerate}[(1), start=2, series=problems]
+		    \item $f(x,t) = \sin(\alpha x)$ \hphantom{$\sin(\beta t)$}\hspace*{\fill} $g(x) = 0$ \hspace*{\fill} $h(x) = 0$
+		\item $f(x,t) = \sin(\alpha x)\sin(\beta t)$  \hspace*{\fill} \negmedspace$g(x) = 0$ \hspace*{\fill} $h(x) = 0$
+            \item $f(x,t) = f(x)$\hphantom{xx$\sin(\beta t)$} \hspace*{\fill} $g(x) = 0$ \hspace*{\fill} $h(x) = 0$
+            \item $f(x,t) = f(x)t$\hphantom{x $\sin(\beta t)$} \hspace*{\fill} $g(x) = 0$ \hspace*{\fill} $h(x) = 0$
+		\end{enumerate}
+            In the case $(3)$ assume that $f(x) = F''(x)$ and in the case $(4)$ assume that
+            $f(x) = F'''(x)$.
+            \end{boldenv}
+		
+	\begin{ans}
+		\begin{enumerate}[(1), series=answers]
+            \item Since $g(x) = h(x) = 0$, the formula is given by \[u(x,t) = 0 + 0 + \frac{1}{2c}\int_0^t\int_{x-c(t-s)}^{x+c(t-s)}\sin(\alpha y)\,dy\,ds.\]
+            Solving this gives the following:
+            \begin{align*}
+                \frac{1}{2c}\int_0^t\int_{x-c(t-s)}^{x+c(t-s)}\sin(\alpha y)\,dy\,ds
+                &= \frac{1}{2c}\int_0^t\left[ \frac{1}{\alpha}(\cos(\alpha(x-ct+cs))-\cos(\alpha(x+ct-cs)))\right]ds\\
+                &= \frac{1}{2c\alpha}\int_0^t\left[\cos(\alpha(x-ct+cs))-\cos(\alpha(x+ct-cs))\right]ds\\
+                &= \frac{1}{2c\alpha}\int_0^t(-2)\left[\sin\left(\frac{2\alpha x}{2}\right)\sin\left(\frac{2\alpha(cs-ct)}{2}\right)\right]ds\\
+                &= -\frac{1}{c\alpha}\int_0^t\left[\sin\left(\alpha x\right)\sin\left(\alpha(cs-ct)\right)\right]ds\\
+                &= -\frac{\sin\left(\alpha x\right)}{c\alpha}\int_0^t\sin\left(\alpha(cs-ct)\right)ds\\
+                &= -\frac{\sin\left(\alpha x\right)}{c\alpha}\left[-\frac{1}{c\alpha}\cos(\alpha(cs-ct))\right]_{s=0}^{s=t}\\
+                \Aboxed{u(x,t) &=\frac{\sin\left(\alpha x\right)\left(1-\cos(-c\alpha t)\right)}{(c\alpha)^2}}
+            \end{align*}
+
+            \item Solving this PDE is given by solving the following double integral. \begin{align*}
+                \frac{1}{2c}\int_0^t\int_{x-c(t-s)}^{x+c(t-s)}\sin(\alpha y)\sin(\beta s)\,dy\,ds
+                &= \frac{1}{2c}\int_0^t\left[ \frac{1}{\alpha}\sin(\beta s)(\cos(\alpha(x-ct+cs))-\cos(\alpha(x+ct-cs)))\right]ds\\
+                &= \frac{1}{2c\alpha}\int_0^t\sin(\beta s)\left[\cos(\alpha(x-ct+cs))-\cos(\alpha(x+ct-cs))\right]ds\\
+                &= \frac{1}{2c\alpha}\int_0^t(-2)\sin(\beta s)\left[\sin\left(\frac{2\alpha x}{2}\right)\sin\left(\frac{2\alpha(cs-ct)}{2}\right)\right]ds\\
+                &= -\frac{1}{c\alpha}\int_0^t\sin(\beta s)\sin\left(\alpha x\right)\sin\left(\alpha(cs-ct)\right)ds\\
+                &= \frac{\sin\left(\alpha x\right)}{c\alpha}\int_0^t\sin(\beta s)\sin\left(\alpha(ct-cs)\right)ds\\
+                &= \frac{\sin\left(\alpha x\right)}{2c\alpha}\int_0^t\left[\cos(\beta s - \alpha(ct-cs)) - \cos(\beta s + \alpha(ct-cs))\right]ds\\
+                &=\frac{\sin\left(\alpha x\right)}{2c\alpha}\int_0^t\left[\cos((\beta+\alpha c)s - c\alpha t) - \cos((\beta-\alpha c)s + c\alpha t)\right]ds\\
+                &=
+                \frac{\sin\left(\alpha x\right)}{2c\alpha}\left[\frac{1}{\beta + \alpha c}\sin((\beta+\alpha c)s - c\alpha t) - \frac{1}{\beta - \alpha c}\sin((\beta-\alpha c)s + c\alpha t)\right]_0^t\\
+                &=\frac{\sin\left(\alpha x\right)}{2c\alpha}\left[\left(\frac{\sin(\beta t)}{\beta + \alpha c} - \frac{\sin(\beta t)}{\beta - \alpha c} \right) + \left(\frac{\sin(c\alpha t)}{\beta + \alpha c} + \frac{\sin(c\alpha t)}{\beta - \alpha c} \right)\right]\\
+                \Aboxed{u(x,t) &= \frac{\sin\left(\alpha x\right)}{2c\alpha}\left(\frac{\sin(\beta t) + \sin(\alpha ct)}{\beta + \alpha c} + \frac{\sin(\alpha ct) - \sin(\beta t)}{\beta - \alpha c}\right)}
+                \end{align*}
+
+            \item Assume $f(x) = F''(x)$. Solving this PDE is given by solving the following double integral.
+            \begin{align*}
+                \frac{1}{2c}\int_0^t\int_{x-c(t-s)}^{x+c(t-s)}f(y)\,dy\,ds &= \frac{1}{2c}\int_0^t\int_{x-c(t-s)}^{x+c(t-s)}F''(y)\,dy\,ds\\
+                &=\frac{1}{2c}\int_0^t\left[F'(y)\right]_{x-c(t-s)}^{x+c(t-s)}ds\\
+                &=\frac{1}{2c}\int_0^t\left[F'(x+ct-cs) - F'(x-ct+cs)\right]ds\\
+                &=\frac{1}{2c}\left[-\frac{1}{c}F(x+ct-cs) - \frac{1}{c}F(x-ct+cs)\right]_0^t\\
+                &=-\frac{1}{2c^2}\left[F(x+ct-cs) + F(x-ct+cs)\right]_0^t\\
+                &=-\frac{1}{2c^2}\left[(F(x)-F(x)) - (F(x+ct) - F(x-ct))\right]\\
+                \Aboxed{u(x,t) &= \frac{1}{2c^2}\left[F(x+ct) - F(x-ct)\right]}
+            \end{align*}
+
+            \item Assume $f(x) = F'''(x)$. Solving this PDE is given by solving the following double integral.
+
+            \begin{align*}
+                \frac{1}{2c}\int_0^t\int_{x-c(t-s)}^{x+c(t-s)}f(y)s\,dy\,ds &= \frac{1}{2c}\int_0^t\int_{x-c(t-s)}^{x+c(t-s)}F'''(y)s\,dy\,ds\\
+                &=\frac{1}{2c}\int_0^ts\left[F''(y)s\right]_{x-c(t-s)}^{x+c(t-s)}ds\\
+                &=\frac{1}{2c}\int_0^ts\left[F''(x+ct-cs) - F''(x-ct+cs)\right]ds\\
+                &=\frac{1}{2c}\left[\int_0^tsF''(x+ct-cs)ds - \int_0^t sF''(x-ct+cs)ds\right]
+            \end{align*}
+            We will solve these one at a time. First, using Integration by Parts
+            \begin{align*}
+            \int_0^tsF''(x+ct-cs)ds &= \left.\frac{-s}{c}F'(x+ct-cs)\right|_0^t + \frac{1}{c}\int_0^t F'(x+ct-cs)ds\\
+            &= \frac{-t}{c}F'(x) - \left.\frac{1}{c^2}F(x+ct-cs)\right|^t_0\\
+            &= \frac{-t}{c}F'(x) - \frac{1}{c^2}\left[F(x) - F(x+ct)\right]
+            \end{align*}
+
+            We will now solve the second integral, also using integration by parts.
+
+            \begin{align*}
+            \int_0^tsF''(x-ct+cs)ds &= \left.\frac{s}{c}F'(x-ct+cs)\right|_0^t - \frac{1}{c}\int_0^t F'(x-ct+cs)ds\\
+            &= \frac{t}{c}F'(x) - \left.\frac{1}{c^2}F(x-ct+cs)\right|^t_0\\
+            &= \frac{t}{c}F'(x) - \frac{1}{c^2}\left[F(x) - F(x-ct)\right]
+            \end{align*}
+
+            This gives us our final solution that 
+            \begin{align*}
+            u(x,t) &= \frac{1}{2c}\left[ \frac{-t}{c}F'(x) - \frac{1}{c^2}\left[F(x) - F(x+ct)\right] - \frac{t}{c}F'(x) + \frac{1}{c^2}\left[F(x) - F(x-ct)\right] \right]\\
+            \Aboxed{u(x,t) &= -\frac{1}{2c^2}\left[2t + \frac{F(x-ct)}{c} - \frac{F(x+ct)}{c}\right]}
+            \end{align*}
+		\end{enumerate}
+	\end{ans}
+
+    \begin{boldenv}
+    \underline{Problem 4}.
+    \begin{enumerate}[a)]
+        \item Find solution $u(x,t)$ to
+        \[\begin{cases}
+            u_{tt} - u_{xx} = (x^2 - 1)e^{-\frac{x^2}{2}},\\
+            u|_{t=0} = -e^{-\frac{x^2}{2}}, u_t|_{t=0} = 0.
+        \end{cases}\]
+
+        \item Find $\lim_{t\to +\infty} u(x,t).$
+    \end{enumerate}
+    \end{boldenv}
+
+    \begin{ans}
+    \begin{enumerate}[a)]
+        \item We begin by plugging data into the appropriate formula.
+        \begin{align*}
+            u(x,t) = \frac{1}{2}\left[-e^{-\frac{(x+ct)^2}{2}} -e^{\frac{-(x-ct)^2}{2}}\right] + \frac{1}{2c}\int_{x-ct}^{x+ct}0\,ds + \frac{1}{2c}\int_0^t\int_{x-c(t-s)}^{x+c(t-s)}(y^2-1)e^{-\frac{y^2}{2}}dy\,ds
+        \end{align*}
+        We will now evaluate the double integral.
+        \begin{align*}
+            \int_0^t\int_{x-c(t-s)}^{x+c(t-s)}(y^2-1)e^{-\frac{y^2}{2}}dy\,ds &= \int_0^t\int_{x-c(t-s)}^{x+c(t-s)}y^2e^{-\frac{y^2}{2}}dy\,ds - \int_0^t\int_{x-c(t-s)}^{x+c(t-s)}e^{-\frac{y^2}{2}}dy\,ds\\
+            &= \int_0^t\int_{x-c(t-s)}^{x+c(t-s)}y\left(ye^{-\frac{y^2}{2}}\right)dy\,ds - \int_0^t\int_{x-c(t-s)}^{x+c(t-s)}e^{-\frac{y^2}{2}}dy\,ds\\
+        \end{align*}
+        Let $$E = \int_{x-c(t-s)}^{x+c(t-s)}e^{-\frac{y^2}{2}}.$$
+        Then we evaluate
+        \begin{align*}
+            \int_{x-c(t-s)}^{x+c(t-s)}&y\left(ye^{-\frac{y^2}{2}}\right)dy + E\\
+            &= \left.-ye^{-\frac{y^2}{2}}\right|^{x+c(t-s)}_{x-c(t-s)} + E\\
+            &=(x-c(t-s))e^{-\frac{(x-c(t-s))^2}{2}} -(x+c(t-s))e^{-\frac{(x+c(t-s))^2}{2}} + E
+        \end{align*}
+
+        Then we have
+        \begin{align*}
+            \int_0^t\int_{x-c(t-s)}^{x+c(t-s)}(y^2-1)e^{-\frac{y^2}{2}}dy\,ds &=\int_0^t\left[(x-c(t-s))e^{-\frac{(x-c(t-s))^2}{2}} -(x+c(t-s))e^{-\frac{(x+c(t-s))^2}{2}} + E - E\right]ds\\
+            &=\int_0^t\left[(x-c(t-s))e^{-\frac{(x-c(t-s))^2}{2}} -(x+c(t-s))e^{-\frac{(x+c(t-s))^2}{2}}\right]ds\\
+            &=\int_0^t(x-c(t-s))e^{-\frac{(x-c(t-s))^2}{2}}ds -\int_0^t(x+c(t-s))e^{-\frac{(x+c(t-s))^2}{2}}ds
+        \end{align*}
+        
+        Evaluating the first integral gives us
+        \begin{align*}
+            \int_0^t(x-c(t-s))e^{-\frac{(x-c(t-s))^2}{2}}ds &= \frac{1}{c} \int_.^. ae^{-\frac{a^2}{2}}da \tag{Substituting $a=x-ct+cs$}\\
+            &= -\frac{1}{c} \int_.^. e^{b}db \tag{Substituting $b = -\frac{a^2}{2}$}\\
+            &= \left.-\frac{1}{c}e^{-\frac{(x-ct+cs)^2}{2}}\right|_0^t\\
+            &= \frac{1}{c}\left[e^{-\frac{(x-ct)^2}{2}} - e^{-\frac{x^2}{2}}\right]
+        \end{align*}
+
+        Similarly, evaluating the second integral gives us
+        \begin{align*}
+            \int_0^t(x+c(t-s))e^{-\frac{(x+c(t-s))^2}{2}}ds &= -\frac{1}{c} \int_.^. ae^{-\frac{a^2}{2}}da \tag{Substituting $a=x+ct-cs$}\\
+            &= \frac{1}{c} \int_.^. e^{b}db \tag{Substituting $b = -\frac{a^2}{2}$}\\
+            &= \left.\frac{1}{c}e^{-\frac{(x+ct-cs)^2}{2}}\right|_0^t\\
+            &= \frac{1}{c}\left[e^{-\frac{x^2}{2}} - e^{-\frac{(x+ct)^2}{2}}\right]
+        \end{align*}
+
+        Now, we have our final solution that
+        \[\boxed{u(x,t) = -\frac{1}{2}\left[e^{-\frac{(x+ct)^2}{2}} + e^{\frac{-(x-ct)^2}{2}}\right] + \frac{1}{2c^2}\left[e^{-\frac{(x-ct)^2}{2}} + e^{-\frac{(x+ct)^2}{2}} -2e^{-\frac{x^2}{2}}\right]}\]
+
+        \item Because of the squared $t$ term in the decaying exponential, as $t\to +\infty$, we have that each exponential term goes to zero. Therefore, $\lim_{t\to\infty}u(x,t) = 0$.
+    \end{enumerate}
+    \end{ans}
+
+    
+		
+	\end{document} 
